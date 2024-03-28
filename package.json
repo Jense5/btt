@@ -1,0 +1,33 @@
+{
+  "name": "localizer-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/server.ts",
+    "dev": "nodemon -x ts-node src/server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/lodash": "^4.17.0",
+    "@types/node": "^20.11.30",
+    "@types/superagent": "^8.1.6",
+    "@types/uuid": "^9.0.8",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "lodash": "^4.17.21",
+    "noble-mac": "https://github.com/Timeular/noble-mac.git",
+    "nodemon": "^3.1.0",
+    "pcap-ng-parser": "^1.0.0",
+    "superagent": "^8.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.3",
+    "uuid": "^9.0.1"
+  }
+}
