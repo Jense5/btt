@@ -6,8 +6,8 @@
   "scripts": {
     "start": "ts-node src/server.ts",
     "dev": "nodemon -x ts-node src/server.ts",
-    "tower:init": "ts-node src/scripts/tower/init",
-    "tower:run": "ts-node src/scripts/tower/run",
+    "tower": "ts-node src/scripts/tower/run",
+    "tower:reset": "ts-node src/scripts/tower/reset",
     "calc": "ts-node src/scripts/dispatch/run"
   },
   "keywords": [],

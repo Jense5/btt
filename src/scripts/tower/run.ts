@@ -4,54 +4,59 @@ import noble from 'noble-mac'
 import axios from 'axios'
 
 import cfg from './state/config.json'
+import { init } from './init'
 
 const rssis: { [key: string]: number } = {}
 
-const statePath = path.resolve(__dirname, './state/state.json')
-const name = JSON.parse(fs.readFileSync(statePath, 'utf8')).id
+async function main() {
+  await init()
 
-console.log(`Scanning for BT & writing to ${name}...`)
+  const statePath = path.resolve(__dirname, './state/state.json')
+  const name = JSON.parse(fs.readFileSync(statePath, 'utf8')).id
 
-const update = (id: string, rssi: number) => {
-  rssis[id] = rssi
-}
+  console.log(`Scanning for BT & writing to ${name}...`)
 
-noble.on('discover', peripheral => {
-  update(peripheral.uuid, peripheral.rssi)
-
-  if (peripheral.advertisement.localName?.includes('Jensen')) {
-    console.log(peripheral)
+  const update = (id: string | undefined, rssi: number) => {
+    if (id) {
+      rssis[id] = rssi
+    }
   }
 
-  peripheral.connect(function (error: any) {
-    if (error == undefined) {
-      update(peripheral.uuid, peripheral.rssi)
-    }
+  noble.on('discover', peripheral => {
+    update(peripheral.advertisement.manufacturerData?.toString('hex'), peripheral.rssi)
+
+    peripheral.connect(function (error: any) {
+      if (error == undefined) {
+        update(peripheral.advertisement.manufacturerData?.toString('hex'), peripheral.rssi)
+      }
+    })
+
+    setInterval(() => {
+      peripheral.removeAllListeners()
+
+      peripheral.on('connect', function () {
+        update(peripheral.advertisement.manufacturerData?.toString('hex'), peripheral.rssi)
+      })
+
+      peripheral.on('rssiUpdate', function (rssi) {
+        update(peripheral.advertisement.manufacturerData?.toString('hex'), rssi)
+      })
+
+      peripheral.updateRssi(function (error, rssi) {
+        if (error === undefined) {
+          update(peripheral.advertisement.manufacturerData?.toString('hex'), rssi)
+        }
+      })
+    }, 1000)
   })
 
   setInterval(() => {
-    peripheral.removeAllListeners()
+    axios.put(`${cfg.server}/tower/${name}`, rssis)
+  }, 2500)
 
-    peripheral.on('connect', function () {
-      update(peripheral.uuid, peripheral.rssi)
-    })
+  noble.startScanning(err => {
+    console.log('error', err)
+  })
+}
 
-    peripheral.on('rssiUpdate', function (rssi) {
-      update(peripheral.uuid, rssi)
-    })
-
-    peripheral.updateRssi(function (error, rssi) {
-      if (error === undefined) {
-        update(peripheral.uuid, rssi)
-      }
-    })
-  }, 1000)
-})
-
-setInterval(() => {
-  axios.put(`${cfg.server}/tower/${name}`, rssis)
-}, 2500)
-
-noble.startScanning(err => {
-  console.log('error', err)
-})
+main().catch(err => console.error(err))
