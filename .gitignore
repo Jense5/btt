@@ -8,6 +8,7 @@ history
 
 .DS_Store
 otuput/
+src/scripts/tower/state/state.json
 
 # logs
 *.out
