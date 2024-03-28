@@ -7,7 +7,8 @@
     "start": "ts-node src/server.ts",
     "dev": "nodemon -x ts-node src/server.ts",
     "tower:init": "ts-node src/scripts/tower/init",
-    "tower:run": "ts-node src/scripts/tower/run"
+    "tower:run": "ts-node src/scripts/tower/run",
+    "calc": "ts-node src/scripts/dispatch/run"
   },
   "keywords": [],
   "author": "",

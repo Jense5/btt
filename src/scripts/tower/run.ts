@@ -19,6 +19,10 @@ const update = (id: string, rssi: number) => {
 noble.on('discover', peripheral => {
   update(peripheral.uuid, peripheral.rssi)
 
+  if (peripheral.advertisement.localName?.includes('Jensen')) {
+    console.log(peripheral)
+  }
+
   peripheral.connect(function (error: any) {
     if (error == undefined) {
       update(peripheral.uuid, peripheral.rssi)
