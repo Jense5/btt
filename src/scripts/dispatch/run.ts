@@ -1,8 +1,10 @@
 import axios from 'axios'
 import _ from 'lodash'
 
+import data from './data.json'
+
 const toDistance = (rssi: number) => {
-  return Math.pow(10, (-44 - rssi) / (10 * 2.4))
+  return Math.pow(10, (-52 - rssi) / (10 * 2.4))
 }
 
 const triangulate = (x1: number, y1: number, r1: number, x2: number, y2: number, r2: number, x3: number, y3: number, r3: number) => {
@@ -22,6 +24,7 @@ async function main() {
   if (res.data.towers.length !== 3) {
     throw new Error('Invalid amount of towers')
   }
+
   const t1 = res.data.towers[0]
   const t2 = res.data.towers[1]
   const t3 = res.data.towers[2]
@@ -33,23 +36,25 @@ async function main() {
   const ids = _.intersection(t1ids, t2ids, t3ids)
 
   ids.forEach(macAddress => {
-    console.log(macAddress)
-    const coordinate = triangulate(
-      t1.coordinate.x,
-      t1.coordinate.y,
-      toDistance(t1.signals[macAddress]),
-      t2.coordinate.x,
-      t2.coordinate.y,
-      toDistance(t2.signals[macAddress]),
-      t3.coordinate.x,
-      t3.coordinate.y,
-      toDistance(t3.signals[macAddress])
-    )
-    console.log({ id: macAddress, coordinate })
+    if (macAddress === '4c001007721f92d015d868') {
+      console.log(macAddress)
+      const coordinate = triangulate(
+        t1.coordinate.x,
+        t1.coordinate.y,
+        toDistance(t1.signals[macAddress]),
+        t2.coordinate.x,
+        t2.coordinate.y,
+        toDistance(t2.signals[macAddress]),
+        t3.coordinate.x,
+        t3.coordinate.y,
+        toDistance(t3.signals[macAddress])
+      )
+      console.log({ coordinate })
+    }
   })
-  console.log(t1ids.length, t2ids.length, ids.length)
 }
 
 main()
-  .then(() => console.log('Script ready'))
-  .catch(err => console.error(err))
+setInterval(() => {
+  main()
+}, 1250)

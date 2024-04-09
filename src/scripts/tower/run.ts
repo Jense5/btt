@@ -6,6 +6,8 @@ import axios from 'axios'
 import cfg from './state/config.json'
 import { init } from './init'
 
+const advlib = require('advlib-ble-manufacturers')
+const parser = require('@danke77/ble-advertise')
 const rssis: { [key: string]: number } = {}
 
 async function main() {
@@ -24,6 +26,16 @@ async function main() {
 
   noble.on('discover', peripheral => {
     update(peripheral.advertisement.manufacturerData?.toString('hex'), peripheral.rssi)
+
+    if (peripheral.advertisement.localName?.includes('iPhone')) {
+      let processedData = advlib.processManufacturerSpecificData('0x004c', peripheral.advertisement.manufacturerData?.toString('hex'))
+
+      console.log(peripheral.advertisement.manufacturerData)
+      var packets = parser.parse(peripheral.advertisement.manufacturerData)
+      console.log(packets)
+
+      //   console.log(processedData)
+    }
 
     peripheral.connect(function (error: any) {
       if (error == undefined) {
