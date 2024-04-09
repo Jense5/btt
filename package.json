@@ -31,6 +31,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "lodash": "^4.17.21",
+    "noble": "^1.9.1",
     "noble-mac": "https://github.com/Timeular/noble-mac.git",
     "nodemon": "^3.1.0",
     "pcap-ng-parser": "^1.0.0",
