@@ -8,7 +8,9 @@
     "dev": "nodemon -x ts-node src/server.ts",
     "tower": "ts-node src/scripts/tower/run",
     "tower:reset": "ts-node src/scripts/tower/reset",
-    "calc": "ts-node src/scripts/dispatch/run"
+    "calc": "ts-node src/scripts/dispatch/run",
+    "client": "ts-node src/client.ts",
+    "server": "ts-node src/server.ts"
   },
   "keywords": [],
   "author": "",
@@ -35,6 +37,8 @@
     "noble-mac": "https://github.com/Timeular/noble-mac.git",
     "nodemon": "^3.1.0",
     "pcap-ng-parser": "^1.0.0",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
     "superagent": "^8.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.3",
